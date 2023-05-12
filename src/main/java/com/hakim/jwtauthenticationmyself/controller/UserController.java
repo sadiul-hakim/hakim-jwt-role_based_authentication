@@ -1,33 +1,28 @@
 package com.hakim.jwtauthenticationmyself.controller;
 
 import com.hakim.jwtauthenticationmyself.model.User;
-import com.hakim.jwtauthenticationmyself.payload.LoginRequest;
-import com.hakim.jwtauthenticationmyself.payload.LoginResponse;
 import com.hakim.jwtauthenticationmyself.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user){
-        User savedUser = userService.saveUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    @GetMapping("/list")
+    public ResponseEntity<List<User>> getAllUsers(){
+        return ResponseEntity.ok(userService.getAllUser());
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
-        String token = userService.authenticate(loginRequest);
-
-        return ResponseEntity.ok(new LoginResponse(token));
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUser(@PathVariable long userId){
+        return ResponseEntity.ok(userService.getUser(userId));
     }
-
 }

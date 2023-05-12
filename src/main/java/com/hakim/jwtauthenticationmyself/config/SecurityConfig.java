@@ -1,10 +1,12 @@
 package com.hakim.jwtauthenticationmyself.config;
 
 import com.hakim.jwtauthenticationmyself.security.JwtAuthenticationFilter;
+import com.hakim.jwtauthenticationmyself.security.Role;
 import com.hakim.jwtauthenticationmyself.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -30,6 +32,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**")
                 .permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/data/**")
+                .hasRole(Role.USER.name())
+                .requestMatchers(HttpMethod.DELETE,"/api/v1/data/**")
+                .hasRole(Role.ADMIN.name())
                 .anyRequest()
                 .authenticated()
                 .and()
